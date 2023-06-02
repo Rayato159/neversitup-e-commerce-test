@@ -7,6 +7,7 @@ import (
 
 type IUsersUsecase interface {
 	InsertUser(req *users.UserCredential) (*users.UserPassport, error)
+	FindOneUser(userId string) (*users.User, error)
 }
 
 type usersUsecase struct {
@@ -25,6 +26,14 @@ func (u *usersUsecase) InsertUser(req *users.UserCredential) (*users.UserPasspor
 	}
 
 	user, err := u.usersRepository.InsertUser(req)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}
+
+func (u *usersUsecase) FindOneUser(userId string) (*users.User, error) {
+	user, err := u.usersRepository.FindOneUser(userId)
 	if err != nil {
 		return nil, err
 	}

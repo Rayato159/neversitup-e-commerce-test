@@ -1,6 +1,8 @@
 package usersHandler
 
 import (
+	"strings"
+
 	"github.com/Rayato159/neversuitup-e-commerce-test/config"
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/entities"
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/users"
@@ -10,6 +12,7 @@ import (
 
 type IUsersHandler interface {
 	Register(c *fiber.Ctx) error
+	FindOneUser(c *fiber.Ctx) error
 }
 
 type usersHandler struct {
@@ -35,6 +38,24 @@ func (h *usersHandler) Register(c *fiber.Ctx) error {
 	}
 
 	user, err := h.usersUsecase.InsertUser(req)
+	if err != nil {
+		return entities.NewResponse(c).Error(
+			fiber.ErrBadRequest.Code,
+			string(users.RegisterErr),
+			err.Error(),
+		).Res()
+	}
+
+	return entities.NewResponse(c).Success(
+		fiber.StatusCreated,
+		user,
+	).Res()
+}
+
+func (h *usersHandler) FindOneUser(c *fiber.Ctx) error {
+	userId := strings.Trim(c.Params("id"), " ")
+
+	user, err := h.usersUsecase.FindOneUser(userId)
 	if err != nil {
 		return entities.NewResponse(c).Error(
 			fiber.ErrBadRequest.Code,

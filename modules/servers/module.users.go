@@ -36,6 +36,7 @@ func (m *module) NewUsersModule() IUsersModule {
 func (m *usersModule) Init() {
 	g := m.r.Group("/users")
 
+	g.Get("/:id", m.handler.FindOneUser)
 	g.Post("/", m.handler.Register)
 }
 func (m *usersModule) Handler() usersHandler.IUsersHandler          { return m.handler }

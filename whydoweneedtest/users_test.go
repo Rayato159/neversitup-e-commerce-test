@@ -58,3 +58,42 @@ func TestInsertUser(t *testing.T) {
 		}
 	}
 }
+
+type testFindOneUser struct {
+	label   string
+	req     string
+	expect  *users.User
+	isError bool
+}
+
+func TestFindOneUser(t *testing.T) {
+	tests := []testFindOneUser{
+		{
+			label:   "failed -> not found",
+			req:     "U000099",
+			expect:  &users.User{},
+			isError: true,
+		},
+		{
+			label: "success",
+			req:   "U000001",
+			expect: &users.User{
+				Id:       "U000001",
+				Username: "ruangyot",
+			},
+			isError: false,
+		},
+	}
+
+	usersModule := SetupUsersTest().NewUsersModule()
+
+	for _, test := range tests {
+		result, err := usersModule.Usecase().FindOneUser(test.req)
+		if test.isError {
+			assert.NotEmpty(t, err)
+		} else {
+			assert.Empty(t, err)
+			assert.Equal(t, test.expect, result)
+		}
+	}
+}
