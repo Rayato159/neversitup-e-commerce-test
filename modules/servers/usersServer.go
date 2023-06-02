@@ -12,6 +12,7 @@ func (s *server) StartUsersServer() {
 	// Modules
 	modules := NewModule(s, nil)
 	modules.NewMonitorModule().Init()
+	modules.NewUsersModule().Init()
 
 	// Graceful Shutdown
 	c := make(chan os.Signal, 1)
@@ -19,10 +20,10 @@ func (s *server) StartUsersServer() {
 	go func() {
 		_ = <-c
 		log.Println("server is shutting down...")
-		_ = s.App.Shutdown()
+		_ = s.app.Shutdown()
 	}()
 
 	// Listen to host:port
-	log.Printf("users server is starting on %v", s.Cfg.App().Url())
-	s.App.Listen(s.Cfg.App().Url())
+	log.Printf("users server is starting on %v", s.cfg.App().Url())
+	s.app.Listen(s.cfg.App().Url())
 }

@@ -16,16 +16,16 @@ type IServer interface {
 }
 
 type server struct {
-	App *fiber.App
-	Cfg config.IConfig
-	Db  *sqlx.DB
+	app *fiber.App
+	cfg config.IConfig
+	db  *sqlx.DB
 }
 
 func NewServer(cfg config.IConfig, db *sqlx.DB) IServer {
 	return &server{
-		Cfg: cfg,
-		Db:  db,
-		App: fiber.New(fiber.Config{
+		cfg: cfg,
+		db:  db,
+		app: fiber.New(fiber.Config{
 			AppName:      cfg.App().Name(),
 			BodyLimit:    cfg.App().BodyLimit(),
 			ReadTimeout:  cfg.App().ReadTimeout(),
