@@ -5,7 +5,6 @@ import (
 
 	"github.com/Rayato159/neversuitup-e-commerce-test/config"
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/servers"
-	"github.com/Rayato159/neversuitup-e-commerce-test/modules/servers/productsServer"
 	"github.com/Rayato159/neversuitup-e-commerce-test/pkg/database"
 )
 
@@ -22,6 +21,5 @@ func main() {
 	db := database.DbConnect(cfg.Db())
 	defer db.Close()
 
-	server := servers.NewServer(cfg, db)
-	productsServer.NewProductsServer(server).Start()
+	servers.NewServer(cfg, db).StartProductsServer()
 }

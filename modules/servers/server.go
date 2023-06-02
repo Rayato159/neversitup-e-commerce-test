@@ -9,14 +9,20 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type Server struct {
+type IServer interface {
+	StartUsersServer()
+	StartProductsServer()
+	GetServer() *server
+}
+
+type server struct {
 	App *fiber.App
 	Cfg config.IConfig
 	Db  *sqlx.DB
 }
 
-func NewServer(cfg config.IConfig, db *sqlx.DB) *Server {
-	return &Server{
+func NewServer(cfg config.IConfig, db *sqlx.DB) IServer {
+	return &server{
 		Cfg: cfg,
 		Db:  db,
 		App: fiber.New(fiber.Config{
@@ -29,3 +35,5 @@ func NewServer(cfg config.IConfig, db *sqlx.DB) *Server {
 		}),
 	}
 }
+
+func (s *server) GetServer() *server { return s }

@@ -1,31 +1,17 @@
-package usersServer
+package servers
 
 import (
 	"log"
 	"os"
 	"os/signal"
-
-	"github.com/Rayato159/neversuitup-e-commerce-test/modules/servers"
 )
 
-type IUsersServer interface {
-	Start()
-}
-
-type usersServer struct {
-	*servers.Server
-}
-
-func NewUsersServer(s *servers.Server) *usersServer {
-	return &usersServer{s}
-}
-
-func (s *usersServer) Start() {
+func (s *server) StartUsersServer() {
 	// Middlewares
 
 	// Modules
-	v1 := s.App.Group("v1")
-	_ = v1
+	modules := NewModule(s, nil)
+	modules.NewMonitorModule().Init()
 
 	// Graceful Shutdown
 	c := make(chan os.Signal, 1)
