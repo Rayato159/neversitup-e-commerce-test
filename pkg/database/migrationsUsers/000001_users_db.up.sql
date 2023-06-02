@@ -55,7 +55,7 @@ CREATE TABLE "orders" (
 );
 
 CREATE TABLE "products_orders" (
-  "id" VARCHAR PRIMARY KEY,
+  "id" uuid NOT NULL UNIQUE PRIMARY KEY DEFAULT uuid_generate_v4(),
   "order_id" VARCHAR NOT NULL,
   "qty" INT NOT NULL DEFAULT 1,
   "product" jsonb
