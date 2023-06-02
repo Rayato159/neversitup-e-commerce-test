@@ -74,6 +74,7 @@ func LoadConfig(path string) IConfig {
 		},
 		jwt: &jwt{
 			secertKey: envMap["JWT_SECRET_KEY"],
+			apiKey:    envMap["JWT_API_KEY"],
 			accessExpiresAt: func() int {
 				t, err := strconv.Atoi(envMap["JWT_ACCESS_EXPIRES"])
 				if err != nil {
@@ -171,6 +172,7 @@ func (d *db) MaxOpenConns() int { return d.maxConnections }
 
 type IJwtConfig interface {
 	SecretKey() []byte
+	ApiKey() []byte
 	AccessExpiresAt() int
 	RefreshExpiresAt() int
 	SetJwtAccessExpires(t int)
@@ -179,6 +181,7 @@ type IJwtConfig interface {
 
 type jwt struct {
 	secertKey        string
+	apiKey           string
 	accessExpiresAt  int //sec
 	refreshExpiresAt int //sec
 }
@@ -187,6 +190,7 @@ func (c *config) Jwt() IJwtConfig {
 	return c.jwt
 }
 func (j *jwt) SecretKey() []byte          { return []byte(j.secertKey) }
+func (j *jwt) ApiKey() []byte             { return []byte(j.apiKey) }
 func (j *jwt) AccessExpiresAt() int       { return j.accessExpiresAt }
 func (j *jwt) RefreshExpiresAt() int      { return j.refreshExpiresAt }
 func (j *jwt) SetJwtAccessExpires(t int)  { j.accessExpiresAt = t }

@@ -8,11 +8,16 @@ import (
 
 func (s *server) StartUsersServer() {
 	// Middlewares
+	middlewares := s.NewMiddlewares()
+	s.app.Use(middlewares.Handler().Logger())
+	s.app.Use(middlewares.Handler().Cors())
 
 	// Modules
 	modules := NewModule(s, nil)
 	modules.NewMonitorModule().Init()
 	modules.NewUsersModule().Init()
+
+	s.app.Use(middlewares.Handler().RouterCheck())
 
 	// Graceful Shutdown
 	c := make(chan os.Signal, 1)
