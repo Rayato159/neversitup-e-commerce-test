@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . ./
 RUN go mod download
 
-RUN CGO_ENABLED=0 go build /apps/users/main.go -o /bin/app
+RUN CGO_ENABLED=0 go build -o /bin/app /apps/users/main.go
 
 ## Deploy
 FROM gcr.io/distroless/static-debian11
