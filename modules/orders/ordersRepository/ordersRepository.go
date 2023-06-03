@@ -12,7 +12,7 @@ import (
 )
 
 type IOrdersRepository interface {
-	InsertOrder(req *orders.Order) error
+	InsertOrder(req *orders.Order) (string, error)
 	FindOrders(userId string) []*orders.Order
 	FindOneOrder(userId, orderId string) (*orders.Order, error)
 	FindOrderStatus(userId, orderId string) (string, error)
@@ -27,8 +27,78 @@ func NewOrdersRepository(db *sqlx.DB) IOrdersRepository {
 	return &ordersRepository{db}
 }
 
-func (r *ordersRepository) InsertOrder(req *orders.Order) error {
-	return nil
+func (r *ordersRepository) InsertOrder(req *orders.Order) (string, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
+	tx, err := r.db.BeginTxx(ctx, nil)
+	if err != nil {
+		return "", nil
+	}
+
+	queryInsertOrder := `
+	INSERT INTO "orders" (
+		"user_id",
+		"contact",
+		"address",
+		"status"
+	)
+	VALUES ($1, $2, $3, 'waiting')
+	RETURNING "id";`
+
+	var orderId string
+	if err := tx.QueryRowContext(
+		ctx,
+		queryInsertOrder,
+		req.UserId,
+		req.Contact,
+		req.Address,
+	).Scan(&orderId); err != nil {
+		tx.Rollback()
+		return "", fmt.Errorf("insert order failed: %v", err)
+	}
+
+	queryInsertProductsOrders := `
+	INSERT INTO "products_orders" (
+		"order_id",
+		"qty",
+		"product"
+	)
+	VALUES`
+
+	values := make([]any, 0)
+	lastIndex := 0
+
+	for i, p := range req.Products {
+		values = append(values, orderId, p.Qty, p)
+
+		queryInsertProductsOrders += fmt.Sprintf(`
+		($%d, $%d, $%d)`, lastIndex+1, lastIndex+2, lastIndex+3)
+
+		if i != len(req.Products) {
+			queryInsertProductsOrders += ","
+		} else {
+			queryInsertProductsOrders += ";"
+		}
+
+		lastIndex = len(values)
+	}
+
+	if _, err := tx.ExecContext(
+		ctx,
+		queryInsertProductsOrders,
+		values...,
+	); err != nil {
+		tx.Rollback()
+		return "", fmt.Errorf("insert products_orders failed: %v", err)
+	}
+
+	if err := tx.Commit(); err != nil {
+		tx.Rollback()
+		return "", err
+	}
+
+	return orderId, nil
 }
 
 func (r *ordersRepository) FindOrders(userId string) []*orders.Order {

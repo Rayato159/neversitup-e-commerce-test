@@ -36,9 +36,9 @@ func (m *module) NewOrdersModule() IOrdersModule {
 func (m *ordersModule) Init() {
 	g := m.r.Group("/orders")
 
-	g.Get("/:user_id", m.m.Handler().JwtAuth(), m.m.Handler().ParamsCheck(), m.handler.FindOrders)
-	g.Get("/:user_id/:order_id", m.m.Handler().JwtAuth(), m.m.Handler().ParamsCheck(), m.handler.FindOneOrder)
-	g.Patch("/:user_id/:order_id/cancel", m.m.Handler().JwtAuth(), m.m.Handler().ParamsCheck(), m.handler.CancelOrder)
+	g.Get("/", m.m.Handler().JwtAuth(), m.handler.FindOrders)
+	g.Get("/:order_id", m.m.Handler().JwtAuth(), m.handler.FindOneOrder)
+	g.Patch("/:order_id/cancel", m.m.Handler().JwtAuth(), m.handler.CancelOrder)
 }
 func (m *ordersModule) Handler() ordersHandler.IOrdersHandler          { return m.handler }
 func (m *ordersModule) Usecase() ordersUsecase.IOrdersUsecase          { return m.usecase }

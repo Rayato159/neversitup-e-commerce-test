@@ -29,7 +29,7 @@ func NewOrdersHandler(cfg config.IConfig, ordersUsecase ordersUsecase.IOrdersUse
 }
 
 func (h *ordersHandler) FindOrders(c *fiber.Ctx) error {
-	userId := strings.Trim(c.Params("user_id"), " ")
+	userId := strings.Trim(c.Locals("userId").(string), " ")
 
 	return entities.NewResponse(c).Success(
 		fiber.StatusOK,
@@ -38,7 +38,7 @@ func (h *ordersHandler) FindOrders(c *fiber.Ctx) error {
 }
 
 func (h *ordersHandler) FindOneOrder(c *fiber.Ctx) error {
-	userId := strings.Trim(c.Params("user_id"), " ")
+	userId := strings.Trim(c.Locals("userId").(string), " ")
 	orderId := strings.Trim(c.Params("order_id"), " ")
 
 	order, err := h.ordersUsecase.FindOneOrder(userId, orderId)
@@ -57,7 +57,7 @@ func (h *ordersHandler) FindOneOrder(c *fiber.Ctx) error {
 }
 
 func (h *ordersHandler) CancelOrder(c *fiber.Ctx) error {
-	userId := strings.Trim(c.Params("user_id"), " ")
+	userId := strings.Trim(c.Locals("userId").(string), " ")
 	orderId := strings.Trim(c.Params("order_id"), " ")
 
 	order, err := h.ordersUsecase.CancelOrder(userId, orderId)
