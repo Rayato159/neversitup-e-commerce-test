@@ -1,12 +1,14 @@
 package authUsecase
 
 import (
+	"github.com/Rayato159/neversuitup-e-commerce-test/config"
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/auth/authRepository"
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/users"
+	"github.com/Rayato159/neversuitup-e-commerce-test/pkg/lockkunchae"
 )
 
 type IAuthUsecase interface {
-	GetPassport(req *users.UserCredential) (*users.UserPassport, error)
+	GetPassport(cfg config.IConfig, req *users.UserForAll) (*users.UserPassport, error)
 }
 
 type authUsecase struct {
@@ -19,7 +21,37 @@ func NewAuthUsecase(authRepository authRepository.IAuthRepository) IAuthUsecase 
 	}
 }
 
-func (u *authUsecase) GetPassport(req *users.UserCredential) (*users.UserPassport, error) {
+func (u *authUsecase) GetPassport(cfg config.IConfig, req *users.UserForAll) (*users.UserPassport, error) {
+	// Sign token
+	accessToken, err := lockkunchae.Newlockkunchae(lockkunchae.Access, cfg.Jwt(), &users.UserClaims{
+		Id:       req.Id,
+		Username: req.Username,
+	})
+	if err != nil {
+		return nil, err
+	}
+	refreshToken, err := lockkunchae.Newlockkunchae(lockkunchae.Refresh, cfg.Jwt(), &users.UserClaims{
+		Id:       req.Id,
+		Username: req.Username,
+	})
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	// Set passport
+	passport := &users.UserPassport{
+		User: &users.User{
+			Id:       req.Id,
+			Username: req.Username,
+		},
+		Token: &users.UserToken{
+			AccessToken:  accessToken.SignToken(),
+			RefreshToken: refreshToken.SignToken(),
+		},
+	}
+
+	if err := u.authRepository.InsertOauth(passport); err != nil {
+		return nil, err
+	}
+	return passport, nil
 }

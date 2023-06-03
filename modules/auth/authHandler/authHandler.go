@@ -11,6 +11,7 @@ import (
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/users"
 	pb "github.com/Rayato159/neversuitup-e-commerce-test/modules/users/usersProto"
 	"github.com/gofiber/fiber/v2"
+	"golang.org/x/crypto/bcrypt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -31,11 +32,11 @@ func NewAuthHandler(cfg config.IConfig, authUsecase authUsecase.IAuthUsecase) IA
 	}
 }
 
-func (u *authHandler) Login(c *fiber.Ctx) error {
+func (h *authHandler) Login(c *fiber.Ctx) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
 	defer cancel()
 
-	conn, err := grpc.Dial("localhost:1235", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(h.cfg.App().UsersGrpcUrl(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		return entities.NewResponse(c).Error(
 			fiber.ErrInternalServerError.Code,
@@ -56,7 +57,7 @@ func (u *authHandler) Login(c *fiber.Ctx) error {
 		).Res()
 	}
 
-	r, err := client.FindOneUserByUsername(ctx, &pb.FindOneUserByUsernameReq{
+	user, err := client.FindOneUserByUsername(ctx, &pb.FindOneUserByUsernameReq{
 		Username: req.Username,
 	})
 	if err != nil {
@@ -67,12 +68,23 @@ func (u *authHandler) Login(c *fiber.Ctx) error {
 		).Res()
 	}
 
+	// Compare password
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password)); err != nil {
+		return entities.NewResponse(c).Error(
+			fiber.ErrBadRequest.Code,
+			string(auth.LoginErr),
+			"password is invalid",
+		).Res()
+	}
+
+	passport, err := h.authUsecase.GetPassport(h.cfg, &users.UserForAll{
+		Id:       user.Id,
+		Username: user.Username,
+		Password: user.Password,
+	})
+
 	return entities.NewResponse(c).Success(
 		fiber.StatusOK,
-		&users.UserForAll{
-			Id:       r.Id,
-			Username: r.Username,
-			Password: r.Password,
-		},
+		passport,
 	).Res()
 }

@@ -49,6 +49,7 @@ func LoadConfig(path string) IConfig {
 				}
 				return b
 			}(),
+			usersGrpcUrl: envMap["USER_GRPC_URL"],
 		},
 		db: &db{
 			host: envMap["DB_HOST"],
@@ -114,6 +115,7 @@ type IAppConfig interface {
 	BodyLimit() int
 	Host() string
 	Port() int
+	UsersGrpcUrl() string
 }
 
 type app struct {
@@ -124,6 +126,7 @@ type app struct {
 	readTimeout  time.Duration
 	writeTimeout time.Duration
 	bodyLimit    int //bytes
+	usersGrpcUrl string
 }
 
 func (c *config) App() IAppConfig {
@@ -137,6 +140,7 @@ func (a *app) WriteTimeout() time.Duration { return a.writeTimeout }
 func (a *app) BodyLimit() int              { return a.bodyLimit }
 func (a *app) Host() string                { return a.host }
 func (a *app) Port() int                   { return a.port }
+func (a *app) UsersGrpcUrl() string        { return a.usersGrpcUrl }
 
 type IDbConfig interface {
 	Url() string
