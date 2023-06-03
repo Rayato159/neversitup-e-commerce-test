@@ -5,15 +5,15 @@ WORKDIR /app
 COPY . ./
 RUN go mod download
 
-RUN CGO_ENABLED=0 go build -o /bin/app /apps/productsgrpc/main.go
+RUN CGO_ENABLED=0 go build -o /bin/app /app/apps/users/main.go
 
 ## Deploy
 FROM debian:buster-slim
 RUN apt-get update && apt-get install -y ca-certificates
 
 COPY --from=build /bin/app /bin
-COPY .env.products.grpc.dev /bin
+COPY .env.users.dev /bin
 
 EXPOSE 1234
 
-CMD [ "/bin/app", "/bin/.env.products.grpc.dev" ]
+CMD [ "/bin/app", "/bin/.env.users.dev" ]

@@ -5,15 +5,15 @@ WORKDIR /app
 COPY . ./
 RUN go mod download
 
-RUN CGO_ENABLED=0 go build -o /bin/app /apps/authgprc/main.go
+RUN CGO_ENABLED=0 go build -o /bin/app /app/apps/authgrpc/main.go
 
 ## Deploy
 FROM debian:buster-slim
 RUN apt-get update && apt-get install -y ca-certificates
 
 COPY --from=build /bin/app /bin
-COPY .env.auth.gprc.dev /bin
+COPY .env.auth.grpc.dev /bin
 
-EXPOSE 5678
+EXPOSE 8888
 
-CMD [ "/bin/app", "/bin/.env.auth.gprc.dev" ]
+CMD [ "/bin/app", "/bin/.env.auth.grpc.dev" ]

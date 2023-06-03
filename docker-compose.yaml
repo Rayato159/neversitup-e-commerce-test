@@ -1,0 +1,55 @@
+version: "3.9"
+services:
+  auth:
+    build:
+      context: .
+      dockerfile: Dockerfile.Auth
+    ports:
+      - 9999:9999
+    volumes:
+      - ./.env.auth.dev:./bin/.env.auth.dev
+
+  authgrpc:
+    build:
+      context: .
+      dockerfile: Dockerfile.Auth.Grpc
+    ports:
+      - 8888:8888
+    volumes:
+      - ./.env.auth.grpc.dev:./bin/.env.auth.grpc.dev
+
+  products:
+    build:
+      context: .
+      dockerfile: Dockerfile.Products
+    ports:
+      - 5678:5678
+    volumes:
+      - ./.env.products.dev:./bin/.env.products.dev
+
+  productsgrpc:
+    build:
+      context: .
+      dockerfile: Dockerfile.Products.Grpc
+    ports:
+      - 7777:7777
+    volumes:
+      - ./.env.products.grpc.dev:./bin/.env.products.grpc.dev
+
+  users:
+    build:
+      context: .
+      dockerfile: Dockerfile.Users
+    ports:
+      - 1234:1234
+    volumes:
+      - ./.env.users.dev:./bin/.env.users.dev
+
+  usersgrpc:
+    build:
+      context: .
+      dockerfile: Dockerfile.Users.Grpc
+    ports:
+      - 1235:1235
+    volumes:
+      - ./.env.users.grpc.dev:./bin/.env.users.grpc.dev
