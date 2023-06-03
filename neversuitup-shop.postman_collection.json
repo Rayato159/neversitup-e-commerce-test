@@ -1,0 +1,1465 @@
+{
+	"info": {
+		"_postman_id": "0db74b87-edb3-41b5-93c6-572f7141bfdc",
+		"name": "neversuitup-shop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18192292"
+	},
+	"item": [
+		{
+			"name": "auth app",
+			"item": [
+				{
+					"name": "health check",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{api_key}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-Api-Key",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{auth_url}}",
+							"host": [
+								"{{auth_url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 - ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{auth_url}}",
+									"host": [
+										"{{auth_url}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sat, 03 Jun 2023 11:06:33 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "51"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"neversuitup-shop-auth\",\n    \"version\": \"v0.1.0\"\n}"
+						}
+					]
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let res = pm.response.json()\r",
+									"let access_token = res.token.access_token\r",
+									"let refresh_token = res.token.refresh_token\r",
+									"let id = res.token.id\r",
+									"pm.environment.set(\"access_token\", access_token)\r",
+									"pm.environment.set(\"refresh_token\", refresh_token)\r",
+									"pm.environment.set(\"id\", id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{api_key}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-Api-Key",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "ruangyot",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{auth_url}}/v1/auth/login",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 - ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "prayus",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{auth_url}}/v1/auth/login",
+									"host": [
+										"{{auth_url}}"
+									],
+									"path": [
+										"v1",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sat, 03 Jun 2023 17:19:53 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "737"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"id\": \"U000002\",\n        \"username\": \"prayus\"\n    },\n    \"token\": {\n        \"id\": \"db2fbb18-065b-45f4-ade6-afc6564b02f0\",\n        \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsiaWQiOiJVMDAwMDAyIiwidXNlcm5hbWUiOiJwcmF5dXMifSwiaXNzIjoibmVydmVyc3VpdHVwLXNob3AtYXBpIiwic3ViIjoiYWNjZXNzLXRva2VuIiwiYXVkIjpbInVzZXIiXSwiZXhwIjoxNjg1ODk5MTkzLCJuYmYiOjE2ODU4MTI3OTMsImlhdCI6MTY4NTgxMjc5M30.6S0J68sfDrd_N4IJEBjJTpsdpM0f7uaczY3nc3Sx9UI\",\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsiaWQiOiJVMDAwMDAyIiwidXNlcm5hbWUiOiJwcmF5dXMifSwiaXNzIjoibmVydmVyc3VpdHVwLXNob3AtYXBpIiwic3ViIjoicmVmcmVzaC10b2tlbiIsImF1ZCI6WyJ1c2VyIl0sImV4cCI6MTY4NjQxNzU5MywibmJmIjoxNjg1ODEyNzkzLCJpYXQiOjE2ODU4MTI3OTN9.YxwZr7G_F9A0GDjwLDdFSrGrcymEwg3FwAj9KIWIH1o\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "refresh token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let res = pm.response.json()\r",
+									"let access_token = res.token.access_token\r",
+									"let refresh_token = res.token.refresh_token\r",
+									"let id = res.token.id\r",
+									"pm.environment.set(\"access_token\", access_token)\r",
+									"pm.environment.set(\"refresh_token\", refresh_token)\r",
+									"pm.environment.set(\"id\", id)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{api_key}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-Api-Key",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "refresh_token",
+									"value": "{{refresh_token}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{auth_url}}/v1/auth/refresh",
+							"host": [
+								"{{auth_url}}"
+							],
+							"path": [
+								"v1",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 - ok",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "refresh_token",
+											"value": "{{refresh_token}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{auth_url}}/v1/auth/refresh",
+									"host": [
+										"{{auth_url}}"
+									],
+									"path": [
+										"v1",
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Sat, 03 Jun 2023 21:37:25 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "745"
+								},
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"user\": {\n        \"id\": \"U000001\",\n        \"username\": \"ruangyot\"\n    },\n    \"token\": {\n        \"id\": \"9ef290f3-56f7-4ca2-849f-a6cbca3d384b\",\n        \"access_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsiaWQiOiJVMDAwMDAxIiwidXNlcm5hbWUiOiJydWFuZ3lvdCJ9LCJpc3MiOiJuZXJ2ZXJzdWl0dXAtc2hvcC1hcGkiLCJzdWIiOiJhY2Nlc3MtdG9rZW4iLCJhdWQiOlsidXNlciJdLCJleHAiOjE2ODU5MTQ2NDUsIm5iZiI6MTY4NTgyODI0NSwiaWF0IjoxNjg1ODI4MjQ1fQ.4om8ha_E-LDv-lhfTrQPYcCkVodgy5hyCmIaJGcLnmM\",\n        \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjbGFpbXMiOnsiaWQiOiJVMDAwMDAxIiwidXNlcm5hbWUiOiJydWFuZ3lvdCJ9LCJpc3MiOiJuZXJ2ZXJzdWl0dXAtc2hvcC1hcGkiLCJzdWIiOiJyZWZyZXNoLXRva2VuIiwiYXVkIjpbInVzZXIiXSwiZXhwIjoxNjg2NDI0NDAzLCJuYmYiOjE2ODU4MjgyNDUsImlhdCI6MTY4NTgyODI0NX0.ZhvcMpDglaAxglp0Zuj3EvJ_ZnG0CER4_HFro8fpnh0\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "users app",
+			"item": [
+				{
+					"name": "users",
+					"item": [
+						{
+							"name": "register",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "X-Api-Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "aletter",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "password@1234",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{users_url}}/v1/users",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"v1",
+										"users"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "201 - created",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "aletter",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "password@1234",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{users_url}}/v1/users",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"users"
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 02 Jun 2023 20:33:22 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "59"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"user\": {\n        \"id\": \"U000005\",\n        \"username\": \"aletter\"\n    },\n    \"token\": null\n}"
+								},
+								{
+									"name": "400 - duplicate username",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "aletter",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "password@1234",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{users_url}}/v1/users",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"users"
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 02 Jun 2023 20:35:26 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "150"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"trace_id\": \"users-001\",\n    \"message\": \"insert user failed: ERROR: duplicate key value violates unique constraint \\\"users_username_key\\\" (SQLSTATE 23505)\"\n}"
+								}
+							]
+						},
+						{
+							"name": "profile",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "aletter",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "password@1234",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{users_url}}/v1/users/:user_id",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"v1",
+										"users",
+										":user_id"
+									],
+									"variable": [
+										{
+											"key": "user_id",
+											"value": "U000002"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 - ok",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "aletter",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "password@1234",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{users_url}}/v1/users/:id",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "U000001"
+												}
+											]
+										}
+									},
+									"status": "Created",
+									"code": 201,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 02 Jun 2023 20:47:50 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "38"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"U000001\",\n    \"username\": \"ruangyot\"\n}"
+								},
+								{
+									"name": "400 - not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "username",
+													"value": "aletter",
+													"type": "text"
+												},
+												{
+													"key": "password",
+													"value": "password@1234",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{users_url}}/v1/users/:id",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"users",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "U000099"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Fri, 02 Jun 2023 20:48:06 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "80"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"trace_id\": \"users-001\",\n    \"message\": \"get user failed: sql: no rows in result set\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "orders",
+					"item": [
+						{
+							"name": "find orders",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{users_url}}/v1/orders",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"v1",
+										"orders"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 - ok",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{users_url}}/v1/orders/:user_id",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"orders",
+												":user_id"
+											],
+											"variable": [
+												{
+													"key": "user_id",
+													"value": "U000002"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 03 Jun 2023 18:49:17 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "392"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"O000003\",\n        \"user_id\": \"U000002\",\n        \"contact\": \"Prayus Prayus\",\n        \"address\": \"919 Soi Phimtong, Ladprao 101 Rd., Bangkapi\",\n        \"status\": \"completed\",\n        \"created_at\": \"2023-06-03T17:50:32.188914\",\n        \"updated_at\": \"2023-06-03T17:50:32.188914\",\n        \"total\": 160,\n        \"products\": [\n            {\n                \"id\": \"52769058-be3a-428a-b67b-751c1013c355\",\n                \"qty\": 2,\n                \"product\": {\n                    \"id\": \"P000005\",\n                    \"title\": \"F-35\",\n                    \"description\": \"Prayusssssss plane\",\n                    \"price\": 80\n                }\n            }\n        ]\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "find one order",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{users_url}}/v1/orders/:order_id",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"v1",
+										"orders",
+										":order_id"
+									],
+									"variable": [
+										{
+											"key": "order_id",
+											"value": "O000002"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 - ok",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{users_url}}/v1/orders/:user_id/:order_id",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"orders",
+												":user_id",
+												":order_id"
+											],
+											"variable": [
+												{
+													"key": "user_id",
+													"value": "U000002"
+												},
+												{
+													"key": "order_id",
+													"value": "O000003"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 03 Jun 2023 18:48:50 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "390"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"O000003\",\n    \"user_id\": \"U000002\",\n    \"contact\": \"Prayus Prayus\",\n    \"address\": \"919 Soi Phimtong, Ladprao 101 Rd., Bangkapi\",\n    \"status\": \"completed\",\n    \"created_at\": \"2023-06-03T17:50:32.188914\",\n    \"updated_at\": \"2023-06-03T17:50:32.188914\",\n    \"total\": 160,\n    \"products\": [\n        {\n            \"id\": \"52769058-be3a-428a-b67b-751c1013c355\",\n            \"qty\": 2,\n            \"product\": {\n                \"id\": \"P000005\",\n                \"title\": \"F-35\",\n                \"description\": \"Prayusssssss plane\",\n                \"price\": 80\n            }\n        }\n    ]\n}"
+								},
+								{
+									"name": "400 - not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{users_url}}/v1/orders/:user_id/:order_id",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"orders",
+												":user_id",
+												":order_id"
+											],
+											"variable": [
+												{
+													"key": "user_id",
+													"value": "U000001"
+												},
+												{
+													"key": "order_id",
+													"value": "O000099"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 03 Jun 2023 18:35:57 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "94"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"trace_id\": \"orders-001\",\n    \"message\": \"get order_id: O000099 failed: sql: no rows in result set\"\n}"
+								}
+							]
+						},
+						{
+							"name": "cancel order",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{users_url}}/v1/orders/:order_id/cancel",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"v1",
+										"orders",
+										":order_id",
+										"cancel"
+									],
+									"variable": [
+										{
+											"key": "order_id",
+											"value": "O000002"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 - ok",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"url": {
+											"raw": "{{users_url}}/v1/orders/:order_id/cancel",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"orders",
+												":order_id",
+												"cancel"
+											],
+											"variable": [
+												{
+													"key": "order_id",
+													"value": "O000002"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 03 Jun 2023 19:15:00 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "402"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"O000002\",\n    \"user_id\": \"U000001\",\n    \"contact\": \"Ruangyot Nanchiang\",\n    \"address\": \"96/5 Chakrapatdipong Wat Sommanas Pom Prap Sattru Phai\",\n    \"status\": \"canceled\",\n    \"created_at\": \"2023-06-04T02:03:14.374281\",\n    \"updated_at\": \"2023-06-03T19:15:00.836099\",\n    \"total\": 75,\n    \"products\": [\n        {\n            \"id\": \"6ac89508-b2b8-40c4-8a76-419400b531d1\",\n            \"qty\": 3,\n            \"product\": {\n                \"id\": \"P000004\",\n                \"title\": \"Chocolate\",\n                \"description\": \"Sweetie pie\",\n                \"price\": 25\n            }\n        }\n    ]\n}"
+								},
+								{
+									"name": "400 - not found",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"url": {
+											"raw": "{{users_url}}/v1/orders/:order_id/cancel",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"orders",
+												":order_id",
+												"cancel"
+											],
+											"variable": [
+												{
+													"key": "order_id",
+													"value": "U000002"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 03 Jun 2023 19:13:24 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "94"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"trace_id\": \"orders-002\",\n    \"message\": \"get order_id: sql: no rows in result set failed: U000002\"\n}"
+								}
+							]
+						},
+						{
+							"name": "insert order",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"contact\": \"Ruangyot Test\",\r\n    \"address\": \"123/4 Wonderland, USA\",\r\n    \"products\": [\r\n        {\r\n            \"qty\": 1,\r\n            \"product\": {\r\n                \"id\": \"P000001\",\r\n                \"title\": \"Beer\",\r\n                \"description\": \"Better than milk\",\r\n                \"price\": 52\r\n            }\r\n        },\r\n        {\r\n            \"qty\": 2,\r\n            \"product\": {\r\n                \"id\": \"P000004\",\r\n                \"title\": \"Chocolate\",\r\n                \"description\": \"Sweetie pie\",\r\n                \"price\": 25\r\n            }\r\n        }\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{users_url}}/v1/orders",
+									"host": [
+										"{{users_url}}"
+									],
+									"path": [
+										"v1",
+										"orders"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "201 - ok",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"contact\": \"Ruangyot Test\",\r\n    \"address\": \"123/4 Wonderland, USA\",\r\n    \"products\": [\r\n        {\r\n            \"qty\": 1,\r\n            \"product\": {\r\n                \"id\": \"P000001\",\r\n                \"title\": \"Beer\",\r\n                \"description\": \"Better than milk\",\r\n                \"price\": 52\r\n            }\r\n        },\r\n        {\r\n            \"qty\": 2,\r\n            \"product\": {\r\n                \"id\": \"P000004\",\r\n                \"title\": \"Chocolate\",\r\n                \"description\": \"Sweetie pie\",\r\n                \"price\": 25\r\n            }\r\n        }\r\n    ]\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{users_url}}/v1/orders",
+											"host": [
+												"{{users_url}}"
+											],
+											"path": [
+												"v1",
+												"orders"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 03 Jun 2023 21:16:39 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "502"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"O000011\",\n    \"user_id\": \"U000001\",\n    \"contact\": \"Ruangyot Test\",\n    \"address\": \"123/4 Wonderland, USA\",\n    \"status\": \"waiting\",\n    \"created_at\": \"2023-06-03T21:16:39.88393\",\n    \"updated_at\": \"2023-06-03T21:16:39.88393\",\n    \"total\": 102,\n    \"products\": [\n        {\n            \"id\": \"3792f26c-770b-4069-8076-77cf68b6d71a\",\n            \"qty\": 1,\n            \"product\": {\n                \"id\": \"P000001\",\n                \"title\": \"Beer\",\n                \"description\": \"Better than milk\",\n                \"price\": 52\n            }\n        },\n        {\n            \"id\": \"6ef54922-1024-4c80-9411-702205e835e0\",\n            \"qty\": 2,\n            \"product\": {\n                \"id\": \"P000004\",\n                \"title\": \"Chocolate\",\n                \"description\": \"Sweetie pie\",\n                \"price\": 25\n            }\n        }\n    ]\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "health check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{users_url}}",
+							"host": [
+								"{{users_url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 - ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{users_url}}",
+									"host": [
+										"{{users_url}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 02 Jun 2023 20:29:04 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "52"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"neversuitup-shop-users\",\n    \"version\": \"v0.1.0\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "products app",
+			"item": [
+				{
+					"name": "products",
+					"item": [
+						{
+							"name": "find products",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "X-Api-Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{products_url}}/v1/products",
+									"host": [
+										"{{products_url}}"
+									],
+									"path": [
+										"v1",
+										"products"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 - ok",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{products_url}}/v1/products",
+											"host": [
+												"{{products_url}}"
+											],
+											"path": [
+												"v1",
+												"products"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 03 Jun 2023 11:57:13 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "841"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "[\n    {\n        \"id\": \"P000001\",\n        \"title\": \"Beer\",\n        \"description\": \"Better than milk\",\n        \"price\": 52,\n        \"created_at\": \"2023-06-03T17:47:10.291603Z\",\n        \"updated_at\": \"2023-06-03T17:47:10.291603Z\"\n    },\n    {\n        \"id\": \"P000002\",\n        \"title\": \"Cookie\",\n        \"description\": \"This is for eat only not for any browser\",\n        \"price\": 49,\n        \"created_at\": \"2023-06-03T17:47:10.291603Z\",\n        \"updated_at\": \"2023-06-03T17:47:10.291603Z\"\n    },\n    {\n        \"id\": \"P000003\",\n        \"title\": \"Coke\",\n        \"description\": \"Better than Pepsi\",\n        \"price\": 14,\n        \"created_at\": \"2023-06-03T17:47:10.291603Z\",\n        \"updated_at\": \"2023-06-03T17:47:10.291603Z\"\n    },\n    {\n        \"id\": \"P000004\",\n        \"title\": \"Chocolate\",\n        \"description\": \"Sweetie pie\",\n        \"price\": 25,\n        \"created_at\": \"2023-06-03T17:47:10.291603Z\",\n        \"updated_at\": \"2023-06-03T17:47:10.291603Z\"\n    },\n    {\n        \"id\": \"P000005\",\n        \"title\": \"F-35A\",\n        \"description\": \"Prayusssssss plane\",\n        \"price\": 80,\n        \"created_at\": \"2023-06-03T17:47:10.291603Z\",\n        \"updated_at\": \"2023-06-03T17:47:10.291603Z\"\n    }\n]"
+								}
+							]
+						},
+						{
+							"name": "find one product",
+							"request": {
+								"auth": {
+									"type": "apikey",
+									"apikey": [
+										{
+											"key": "value",
+											"value": "{{api_key}}",
+											"type": "string"
+										},
+										{
+											"key": "key",
+											"value": "X-Api-Key",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{products_url}}/v1/products/:product_id",
+									"host": [
+										"{{products_url}}"
+									],
+									"path": [
+										"v1",
+										"products",
+										":product_id"
+									],
+									"variable": [
+										{
+											"key": "product_id",
+											"value": "P000001"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 - ok",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{products_url}}/v1/products/:product_id",
+											"host": [
+												"{{products_url}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":product_id"
+											],
+											"variable": [
+												{
+													"key": "product_id",
+													"value": "P000001"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 03 Jun 2023 11:57:42 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "161"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": \"P000001\",\n    \"title\": \"Beer\",\n    \"description\": \"Better than milk\",\n    \"price\": 52,\n    \"created_at\": \"2023-06-03T17:47:10.291603Z\",\n    \"updated_at\": \"2023-06-03T17:47:10.291603Z\"\n}"
+								},
+								{
+									"name": "400 - not found",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{products_url}}/v1/products/:product_id",
+											"host": [
+												"{{products_url}}"
+											],
+											"path": [
+												"v1",
+												"products",
+												":product_id"
+											],
+											"variable": [
+												{
+													"key": "product_id",
+													"value": "P000099"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Date",
+											"value": "Sat, 03 Jun 2023 11:57:55 GMT"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										},
+										{
+											"key": "Content-Length",
+											"value": "86"
+										},
+										{
+											"key": "Vary",
+											"value": "Origin"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"trace_id\": \"products-002\",\n    \"message\": \"get product failed: sql: no rows in result set\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "health check",
+					"request": {
+						"auth": {
+							"type": "apikey",
+							"apikey": [
+								{
+									"key": "value",
+									"value": "{{api_key}}",
+									"type": "string"
+								},
+								{
+									"key": "key",
+									"value": "X-Api-Key",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{products_url}}",
+							"host": [
+								"{{products_url}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200 - ok",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{products_url}}",
+									"host": [
+										"{{products_url}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Fri, 02 Jun 2023 19:33:03 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Content-Length",
+									"value": "55"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"name\": \"neversuitup-shop-products\",\n    \"version\": \"v0.1.0\"\n}"
+						}
+					]
+				}
+			]
+		}
+	]
+}
