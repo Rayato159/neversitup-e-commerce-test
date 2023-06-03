@@ -26,6 +26,12 @@ func SetupProductsTest() servers.IModule {
 	return servers.NewModule(s.GetServer(), nil)
 }
 
+func GetConfig() config.IConfig {
+	cfg := config.LoadConfig("./.env.users.test")
+
+	return cfg
+}
+
 func CompressToJSON(obj any) string {
 	result, _ := json.Marshal(&obj)
 	return string(result)
