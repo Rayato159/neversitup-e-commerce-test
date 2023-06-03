@@ -4,7 +4,6 @@ syntax = "proto3";
 // Option
 option go_package = "github.com/Rayato159/neversuitup-e-commerce-test";
 
-// Product Object
 message FindOneUserByUsernameReq {
     string username = 1;
 }
@@ -15,7 +14,7 @@ message UserForAll{
     string password = 3;
 }
 
-// Metthods
+// Methods
 service UsersServices {
     rpc FindOneUserByUsername (FindOneUserByUsernameReq) returns (UserForAll) {}
 }

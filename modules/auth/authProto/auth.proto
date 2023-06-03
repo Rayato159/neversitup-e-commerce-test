@@ -13,7 +13,7 @@ message FindAccessTokenRes {
     bool result = 1;
 }
 
-// Metthods
+// Methods
 service AuthServices {
     rpc FindAccessToken (FindAccessTokenReq) returns (FindAccessTokenRes) {}
 }

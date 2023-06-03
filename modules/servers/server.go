@@ -18,6 +18,7 @@ type IServer interface {
 	// gRPC
 	StartUsersGRPCServer()
 	StartAuthGRPCServer()
+	StartProductsGRPCServer()
 }
 
 type server struct {
