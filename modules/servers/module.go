@@ -5,6 +5,7 @@ import "github.com/gofiber/fiber/v2"
 type IModule interface {
 	NewMonitorModule() IMonitorModule
 	NewUsersModule() IUsersModule
+	NewProductsModule() IProductsModule
 }
 
 type module struct {

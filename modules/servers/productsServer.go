@@ -15,6 +15,7 @@ func (s *server) StartProductsServer() {
 	// Modules
 	modules := NewModule(s, middlewares)
 	modules.NewMonitorModule().Init()
+	modules.NewProductsModule().Init()
 
 	s.app.Use(middlewares.Handler().RouterCheck())
 
