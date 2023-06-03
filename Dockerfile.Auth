@@ -1,0 +1,18 @@
+FROM golang:1.20-buster AS build
+
+WORKDIR /app
+
+COPY . ./
+RUN go mod download
+
+RUN CGO_ENABLED=0 go build -o /bin/app /apps/users/main.go
+
+## Deploy
+FROM gcr.io/distroless/static-debian11
+
+COPY --from=build /bin/app /bin
+COPY .env.users.dev /bin
+
+EXPOSE 5678
+
+ENTRYPOINT [ "/bin/app", "/bin/.env.users.dev" ]
