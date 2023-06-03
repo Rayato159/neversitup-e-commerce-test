@@ -14,7 +14,7 @@ func (s *server) StartAuthServer() {
 
 	// Modules
 	modules := NewModule(s, nil)
-	_ = modules
+	modules.NewMonitorModule().Init()
 
 	s.app.Use(middlewares.Handler().RouterCheck())
 
