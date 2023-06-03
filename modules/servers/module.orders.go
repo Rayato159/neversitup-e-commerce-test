@@ -38,6 +38,7 @@ func (m *ordersModule) Init() {
 
 	g.Get("/:user_id", m.m.Handler().JwtAuth(), m.m.Handler().ParamsCheck(), m.handler.FindOrders)
 	g.Get("/:user_id/:order_id", m.m.Handler().JwtAuth(), m.m.Handler().ParamsCheck(), m.handler.FindOneOrder)
+	g.Patch("/:user_id/:order_id/cancel", m.m.Handler().JwtAuth(), m.m.Handler().ParamsCheck(), m.handler.CancelOrder)
 }
 func (m *ordersModule) Handler() ordersHandler.IOrdersHandler          { return m.handler }
 func (m *ordersModule) Usecase() ordersUsecase.IOrdersUsecase          { return m.usecase }

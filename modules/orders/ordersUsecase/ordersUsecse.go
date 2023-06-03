@@ -1,6 +1,8 @@
 package ordersUsecase
 
 import (
+	"fmt"
+
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/orders"
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/orders/ordersRepository"
 )
@@ -8,8 +10,8 @@ import (
 type IOrdersUsecase interface {
 	InsertOrder(req *orders.Order) error
 	FindOrders(userId string) []*orders.Order
-	FindOneOrder(userId string, orderId string) (*orders.Order, error)
-	CancelOrder(userId string) (*orders.Order, error)
+	FindOneOrder(userId, orderId string) (*orders.Order, error)
+	CancelOrder(userId, orderId string) (*orders.Order, error)
 }
 
 type ordersUsecase struct {
@@ -28,7 +30,7 @@ func (u *ordersUsecase) FindOrders(userId string) []*orders.Order {
 	return u.ordersRepository.FindOrders(userId)
 }
 
-func (u *ordersUsecase) FindOneOrder(userId string, orderId string) (*orders.Order, error) {
+func (u *ordersUsecase) FindOneOrder(userId, orderId string) (*orders.Order, error) {
 	order, err := u.ordersRepository.FindOneOrder(userId, orderId)
 	if err != nil {
 		return nil, err
@@ -36,4 +38,22 @@ func (u *ordersUsecase) FindOneOrder(userId string, orderId string) (*orders.Ord
 	return order, nil
 }
 
-func (u *ordersUsecase) CancelOrder(userId string) (*orders.Order, error) { return nil, nil }
+func (u *ordersUsecase) CancelOrder(userId, orderId string) (*orders.Order, error) {
+	status, err := u.ordersRepository.FindOrderStatus(userId, orderId)
+	if err != nil {
+		return nil, err
+	}
+	if status != "waiting" {
+		return nil, fmt.Errorf("status: %v not available to cancel", err)
+	}
+
+	if err := u.ordersRepository.CancelOrder(userId, orderId); err != nil {
+		return nil, err
+	}
+
+	order, err := u.ordersRepository.FindOneOrder(userId, orderId)
+	if err != nil {
+		return nil, err
+	}
+	return order, nil
+}

@@ -13,6 +13,7 @@ import (
 type IOrdersHandler interface {
 	FindOrders(c *fiber.Ctx) error
 	FindOneOrder(c *fiber.Ctx) error
+	CancelOrder(c *fiber.Ctx) error
 }
 
 type ordersHandler struct {
@@ -45,6 +46,25 @@ func (h *ordersHandler) FindOneOrder(c *fiber.Ctx) error {
 		return entities.NewResponse(c).Error(
 			fiber.ErrBadRequest.Code,
 			string(orders.FindOneOrderErr),
+			err.Error(),
+		).Res()
+	}
+
+	return entities.NewResponse(c).Success(
+		fiber.StatusOK,
+		order,
+	).Res()
+}
+
+func (h *ordersHandler) CancelOrder(c *fiber.Ctx) error {
+	userId := strings.Trim(c.Params("user_id"), " ")
+	orderId := strings.Trim(c.Params("order_id"), " ")
+
+	order, err := h.ordersUsecase.CancelOrder(userId, orderId)
+	if err != nil {
+		return entities.NewResponse(c).Error(
+			fiber.ErrBadRequest.Code,
+			string(orders.CancelOrderErr),
 			err.Error(),
 		).Res()
 	}

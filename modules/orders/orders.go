@@ -4,6 +4,7 @@ type orderErrCode string
 
 const (
 	FindOneOrderErr orderErrCode = "orders-001"
+	CancelOrderErr  orderErrCode = "orders-002"
 )
 
 type Order struct {

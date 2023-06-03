@@ -62,3 +62,47 @@ func TestFindOneOrder(t *testing.T) {
 		}
 	}
 }
+
+type testCancelOrder struct {
+	userId  string
+	orderId string
+	isError bool
+}
+
+func TestCancelOrder(t *testing.T) {
+	tests := []testFindOneOrder{
+		{
+			userId:  "U000099",
+			orderId: "O000002",
+			isError: true,
+		},
+		{
+			userId:  "U000002",
+			orderId: "O000099",
+			isError: true,
+		},
+		{
+			userId:  "U000001",
+			orderId: "O000001",
+			isError: true,
+		},
+		{
+			userId:  "U000001",
+			orderId: "O000002",
+			isError: false,
+		},
+	}
+
+	ordersModule := SetupUsersTest().NewOrdersModule()
+
+	for _, test := range tests {
+		result, err := ordersModule.Usecase().CancelOrder(test.userId, test.orderId)
+		if test.isError {
+			assert.NotEmpty(t, err)
+		} else {
+			assert.Empty(t, err)
+			assert.NotEmpty(t, result)
+			assert.Equal(t, "canceled", result.Status)
+		}
+	}
+}

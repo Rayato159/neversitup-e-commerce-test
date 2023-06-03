@@ -1,9 +1,11 @@
 package ordersRepository
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/orders"
 	"github.com/jmoiron/sqlx"
@@ -12,8 +14,9 @@ import (
 type IOrdersRepository interface {
 	InsertOrder(req *orders.Order) error
 	FindOrders(userId string) []*orders.Order
-	FindOneOrder(userId string, orderId string) (*orders.Order, error)
-	CancelOrder(userId string) (*orders.Order, error)
+	FindOneOrder(userId, orderId string) (*orders.Order, error)
+	FindOrderStatus(userId, orderId string) (string, error)
+	CancelOrder(userId, orderId string) error
 }
 
 type ordersRepository struct {
@@ -77,7 +80,7 @@ func (r *ordersRepository) FindOrders(userId string) []*orders.Order {
 	return ordersData
 }
 
-func (r *ordersRepository) FindOneOrder(userId string, orderId string) (*orders.Order, error) {
+func (r *ordersRepository) FindOneOrder(userId, orderId string) (*orders.Order, error) {
 	query := `
 	SELECT
 		to_jsonb("t")
@@ -127,6 +130,35 @@ func (r *ordersRepository) FindOneOrder(userId string, orderId string) (*orders.
 	return orderData, nil
 }
 
-func (r *ordersRepository) CancelOrder(userId string) (*orders.Order, error) {
-	return nil, nil
+func (r *ordersRepository) FindOrderStatus(userId, orderId string) (string, error) {
+	_, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	query := `
+	SELECT
+		"status"
+	FROM "orders"
+	WHERE "id" = $1 
+	AND "user_id" = $2;`
+
+	var status string
+	if err := r.db.Get(&status, query, orderId, userId); err != nil {
+		return "", fmt.Errorf("get order_id: %v failed: %v", err, orderId)
+	}
+	return status, nil
+}
+
+func (r *ordersRepository) CancelOrder(userId, orderId string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+	defer cancel()
+
+	query := `
+	UPDATE "orders" SET
+		"status" = 'canceled'
+	WHERE "id" = $1 AND "user_id" = $2;`
+
+	if _, err := r.db.ExecContext(ctx, query, orderId, userId); err != nil {
+		return fmt.Errorf("cancel order_id: %v failed: %v", err, orderId)
+	}
+	return nil
 }

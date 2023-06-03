@@ -37,10 +37,10 @@ CREATE TABLE "users" (
 
 CREATE TABLE "orders" (
   "id" VARCHAR(7) PRIMARY KEY DEFAULT CONCAT('O', LPAD(NEXTVAL('orders_id_seq')::TEXT, 6, '0')),
-  "user_id" VARCHAR,
-  "contact" VARCHAR,
-  "address" VARCHAR,
-  "status" VARCHAR,
+  "user_id" VARCHAR NOT NULL,
+  "contact" VARCHAR NOT NULL,
+  "address" VARCHAR NOT NULL DEFAULT '',
+  "status" order_status NOT NULL,
   "created_at" TIMESTAMP NOT NULL DEFAULT NOW(),
   "updated_at" TIMESTAMP NOT NULL DEFAULT NOW()
 );
