@@ -10,10 +10,10 @@ type IModule interface {
 type module struct {
 	r fiber.Router
 	s *server
-	m any
+	m IMiddlewares
 }
 
-func NewModule(s *server, m any) IModule {
+func NewModule(s *server, m IMiddlewares) IModule {
 	return &module{
 		r: s.app.Group("v1"),
 		s: s,

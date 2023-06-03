@@ -13,7 +13,7 @@ func (s *server) StartUsersServer() {
 	s.app.Use(middlewares.Handler().Cors())
 
 	// Modules
-	modules := NewModule(s, nil)
+	modules := NewModule(s, middlewares)
 	modules.NewMonitorModule().Init()
 	modules.NewUsersModule().Init()
 

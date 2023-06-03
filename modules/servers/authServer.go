@@ -13,7 +13,7 @@ func (s *server) StartAuthServer() {
 	s.app.Use(middlewares.Handler().Cors())
 
 	// Modules
-	modules := NewModule(s, nil)
+	modules := NewModule(s, middlewares)
 	modules.NewMonitorModule().Init()
 
 	s.app.Use(middlewares.Handler().RouterCheck())
