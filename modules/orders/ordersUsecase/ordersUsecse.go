@@ -8,7 +8,7 @@ import (
 )
 
 type IOrdersUsecase interface {
-	InsertOrder(userId string, req *orders.Order) (*orders.Order, error)
+	InsertOrder(req *orders.Order) (*orders.Order, error)
 	FindOrders(userId string) []*orders.Order
 	FindOneOrder(userId, orderId string) (*orders.Order, error)
 	CancelOrder(userId, orderId string) (*orders.Order, error)
@@ -24,17 +24,16 @@ func NewOrdersUsecase(ordersRepository ordersRepository.IOrdersRepository) IOrde
 	}
 }
 
-func (u *ordersUsecase) InsertOrder(userId string, req *orders.Order) (*orders.Order, error) {
+func (u *ordersUsecase) InsertOrder(req *orders.Order) (*orders.Order, error) {
 	orderId, err := u.ordersRepository.InsertOrder(req)
 	if err != nil {
 		return nil, err
 	}
 
-	order, err := u.ordersRepository.FindOneOrder(userId, orderId)
+	order, err := u.ordersRepository.FindOneOrder(req.UserId, orderId)
 	if err != nil {
 		return nil, err
 	}
-
 	return order, nil
 }
 

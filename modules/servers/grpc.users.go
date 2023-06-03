@@ -57,3 +57,14 @@ func (h *usersGrpcServer) FindOneUserByUsername(ctx context.Context, in *pb.Find
 		Password: user.Password,
 	}, nil
 }
+
+func (h *usersGrpcServer) FindOneUserById(ctx context.Context, in *pb.FindOneUserByIdReq) (*pb.FindOneUserByIdRes, error) {
+	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
+	defer cancel()
+
+	isUser := h.usersUsecase.FindOneUserById(in.Id)
+
+	return &pb.FindOneUserByIdRes{
+		Result: isUser,
+	}, nil
+}

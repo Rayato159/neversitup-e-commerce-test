@@ -50,7 +50,7 @@ func (c *productsServicesClient) FindOneProduct(ctx context.Context, opts ...grp
 
 type ProductsServices_FindOneProductClient interface {
 	Send(*FindOneProdcutReq) error
-	CloseAndRecv() (*Product, error)
+	CloseAndRecv() (*ProductArr, error)
 	grpc.ClientStream
 }
 
@@ -62,11 +62,11 @@ func (x *productsServicesFindOneProductClient) Send(m *FindOneProdcutReq) error 
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *productsServicesFindOneProductClient) CloseAndRecv() (*Product, error) {
+func (x *productsServicesFindOneProductClient) CloseAndRecv() (*ProductArr, error) {
 	if err := x.ClientStream.CloseSend(); err != nil {
 		return nil, err
 	}
-	m := new(Product)
+	m := new(ProductArr)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -106,7 +106,7 @@ func _ProductsServices_FindOneProduct_Handler(srv interface{}, stream grpc.Serve
 }
 
 type ProductsServices_FindOneProductServer interface {
-	SendAndClose(*Product) error
+	SendAndClose(*ProductArr) error
 	Recv() (*FindOneProdcutReq, error)
 	grpc.ServerStream
 }
@@ -115,7 +115,7 @@ type productsServicesFindOneProductServer struct {
 	grpc.ServerStream
 }
 
-func (x *productsServicesFindOneProductServer) SendAndClose(m *Product) error {
+func (x *productsServicesFindOneProductServer) SendAndClose(m *ProductArr) error {
 	return x.ServerStream.SendMsg(m)
 }
 

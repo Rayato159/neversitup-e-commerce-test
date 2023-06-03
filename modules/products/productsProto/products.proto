@@ -15,7 +15,11 @@ message Product {
     double price = 4;
 }
 
+message ProductArr {
+    repeated Product products = 1;
+}
+
 // Methods
 service ProductsServices {
-    rpc FindOneProduct (stream FindOneProdcutReq) returns (Product) {}
+    rpc FindOneProduct (stream FindOneProdcutReq) returns (ProductArr) {}
 }

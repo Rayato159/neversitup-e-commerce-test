@@ -5,6 +5,8 @@ type orderErrCode string
 const (
 	FindOneOrderErr orderErrCode = "orders-001"
 	CancelOrderErr  orderErrCode = "orders-002"
+	FindOrdersErr   orderErrCode = "orders-003"
+	InsertOrderErr  orderErrCode = "orders-004"
 )
 
 type Order struct {
@@ -20,9 +22,9 @@ type Order struct {
 }
 
 type OrderProduct struct {
-	Id       string             `json:"id"`
-	Qty      int                `json:"qty"`
-	Products *OrderProductDatum `json:"product"`
+	Id      string             `json:"id"`
+	Qty     int                `json:"qty"`
+	Product *OrderProductDatum `json:"product"`
 }
 
 type OrderProductDatum struct {

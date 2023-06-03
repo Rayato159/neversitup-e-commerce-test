@@ -3,6 +3,7 @@ package whydoweneedtest
 import (
 	"testing"
 
+	"github.com/Rayato159/neversuitup-e-commerce-test/modules/orders"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -103,6 +104,48 @@ func TestCancelOrder(t *testing.T) {
 			assert.Empty(t, err)
 			assert.NotEmpty(t, result)
 			assert.Equal(t, "canceled", result.Status)
+		}
+	}
+}
+
+type testInsertOrder struct {
+	req     *orders.Order
+	isError bool
+}
+
+func TestInsertOrder(t *testing.T) {
+	tests := []testInsertOrder{
+		{
+			req: &orders.Order{
+				UserId:  "U000001",
+				Address: "Test Address",
+				Contact: "Pita Pita",
+				Total:   104,
+				Products: []*orders.OrderProduct{
+					{
+						Qty: 2,
+						Product: &orders.OrderProductDatum{
+							Id:          "P000001",
+							Title:       "Beer",
+							Description: "Better than milk",
+							Price:       52,
+						},
+					},
+				},
+			},
+			isError: false,
+		},
+	}
+
+	ordersModule := SetupUsersTest().NewOrdersModule()
+
+	for _, test := range tests {
+		result, err := ordersModule.Usecase().InsertOrder(test.req)
+		if test.isError {
+			assert.NotEmpty(t, err)
+		} else {
+			assert.Empty(t, err)
+			assert.NotEmpty(t, result)
 		}
 	}
 }

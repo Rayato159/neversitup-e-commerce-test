@@ -9,6 +9,7 @@ type IUsersUsecase interface {
 	InsertUser(req *users.UserCredential) (*users.UserPassport, error)
 	FindOneUser(userId string) (*users.User, error)
 	FindOneUserByUsername(username string) (*users.UserForAll, error)
+	FindOneUserById(userId string) bool
 }
 
 type usersUsecase struct {
@@ -47,4 +48,8 @@ func (u *usersUsecase) FindOneUserByUsername(username string) (*users.UserForAll
 		return nil, err
 	}
 	return user, nil
+}
+
+func (u *usersUsecase) FindOneUserById(userId string) bool {
+	return u.usersRepository.FindOneUserById(userId)
 }

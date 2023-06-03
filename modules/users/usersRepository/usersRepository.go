@@ -13,6 +13,7 @@ type IUsersRepository interface {
 	InsertUser(req *users.UserCredential) (*users.UserPassport, error)
 	FindOneUser(userId string) (*users.User, error)
 	FindOneUserByUsername(username string) (*users.UserForAll, error)
+	FindOneUserById(userId string) bool
 }
 
 type usersRepository struct {
@@ -96,4 +97,22 @@ func (r *usersRepository) FindOneUserByUsername(username string) (*users.UserFor
 		return nil, fmt.Errorf("get user failed: %v", err)
 	}
 	return user, nil
+}
+
+func (r *usersRepository) FindOneUserById(userId string) bool {
+	_, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	query := `
+	SELECT
+		(CASE WHEN COUNT(*) = 1 THEN TRUE ELSE FALSE END)
+	FROM "users" "u"
+	WHERE "u"."id" = $1`
+
+	var user bool
+	if err := r.db.Get(&user, query, userId); err != nil {
+		fmt.Printf("get user failed: %v\n", err)
+		return false
+	}
+	return user
 }

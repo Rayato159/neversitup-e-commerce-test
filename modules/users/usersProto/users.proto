@@ -14,7 +14,17 @@ message UserForAll{
     string password = 3;
 }
 
+
+message FindOneUserByIdReq {
+    string id = 1;
+}
+
+message FindOneUserByIdRes {
+    bool result = 1;
+}
+
 // Methods
 service UsersServices {
     rpc FindOneUserByUsername (FindOneUserByUsernameReq) returns (UserForAll) {}
+    rpc FindOneUserById (FindOneUserByIdReq) returns (FindOneUserByIdRes) {}
 }

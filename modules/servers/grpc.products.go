@@ -2,6 +2,7 @@ package servers
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net"
 
@@ -38,4 +39,35 @@ func NewProductsGRPCModule(productsUsecase productsUsecase.IProductsUsecase) *pr
 	return &productsGrpcServer{
 		productsUsecase: productsUsecase,
 	}
+}
+
+func (h *productsGrpcServer) FindOneProduct(stream pb.ProductsServices_FindOneProductServer) error {
+	products := &pb.ProductArr{
+		Products: make([]*pb.Product, 0),
+	}
+
+	for {
+		productId, err := stream.Recv()
+		if err == io.EOF {
+			fmt.Printf("product_id out of range")
+			break
+		}
+		if err != nil {
+			return err
+		}
+
+		product, err := h.productsUsecase.FindOneProduct(productId.Id)
+		if err != nil {
+			return err
+		}
+		products.Products = append(products.Products, &pb.Product{
+			Id:          product.Id,
+			Title:       product.Title,
+			Description: product.Description,
+			Price:       product.Price,
+		})
+	}
+
+	stream.SendAndClose(products)
+	return nil
 }

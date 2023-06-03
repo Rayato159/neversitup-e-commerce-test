@@ -70,12 +70,12 @@ func (r *ordersRepository) InsertOrder(req *orders.Order) (string, error) {
 	lastIndex := 0
 
 	for i, p := range req.Products {
-		values = append(values, orderId, p.Qty, p)
+		values = append(values, orderId, p.Qty, p.Product)
 
 		queryInsertProductsOrders += fmt.Sprintf(`
 		($%d, $%d, $%d)`, lastIndex+1, lastIndex+2, lastIndex+3)
 
-		if i != len(req.Products) {
+		if i != len(req.Products)-1 {
 			queryInsertProductsOrders += ","
 		} else {
 			queryInsertProductsOrders += ";"
