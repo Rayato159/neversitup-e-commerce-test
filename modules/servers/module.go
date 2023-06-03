@@ -10,6 +10,7 @@ type IModule interface {
 	NewUsersModule() IUsersModule
 	NewProductsModule() IProductsModule
 	NewAuthModule() IAuthModule
+	NewOrdersModule() IOrdersModule
 }
 
 type module struct {

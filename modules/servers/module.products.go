@@ -36,7 +36,7 @@ func (m *module) NewProductsModule() IProductsModule {
 func (m *productsModule) Init() {
 	g := m.r.Group("/products")
 
-	g.Get("/:id", m.m.Handler().ApiKeyAuth(), m.handler.FindOneProduct)
+	g.Get("/:product_id", m.m.Handler().ApiKeyAuth(), m.handler.FindOneProduct)
 	g.Get("/", m.m.Handler().ApiKeyAuth(), m.handler.FindProducts)
 }
 func (m *productsModule) Handler() productsHandler.IProductsHandler          { return m.handler }

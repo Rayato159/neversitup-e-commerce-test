@@ -16,6 +16,7 @@ func (s *server) StartUsersServer() {
 	modules := NewModule(s, middlewares, nil)
 	modules.NewMonitorModule().Init()
 	modules.NewUsersModule().Init()
+	modules.NewOrdersModule().Init()
 
 	s.app.Use(middlewares.Handler().RouterCheck())
 

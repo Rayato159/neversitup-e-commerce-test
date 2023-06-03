@@ -35,7 +35,7 @@ func (h *productsHandler) FindProducts(c *fiber.Ctx) error {
 }
 
 func (h *productsHandler) FindOneProduct(c *fiber.Ctx) error {
-	productId := strings.Trim(c.Params("id"), " ")
+	productId := strings.Trim(c.Params("product_id"), " ")
 
 	product, err := h.productsUsecase.FindOneProduct(productId)
 	if err != nil {

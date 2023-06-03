@@ -53,7 +53,7 @@ func (h *usersHandler) Register(c *fiber.Ctx) error {
 }
 
 func (h *usersHandler) FindOneUser(c *fiber.Ctx) error {
-	userId := strings.Trim(c.Params("id"), " ")
+	userId := strings.Trim(c.Params("user_id"), " ")
 
 	user, err := h.usersUsecase.FindOneUser(userId)
 	if err != nil {
