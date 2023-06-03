@@ -1,0 +1,5 @@
+BEGIN;
+
+TRUNCATE TABLE "oauth" CASCADE;
+
+COMMIT;
