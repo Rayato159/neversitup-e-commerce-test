@@ -1,13 +1,11 @@
 BEGIN;
 
 DROP TRIGGER IF EXISTS set_updated_at_timestamp_users_table ON "users";
-DROP TRIGGER IF EXISTS set_updated_at_timestamp_oauth_table ON "oauth";
 DROP TRIGGER IF EXISTS set_updated_at_timestamp_orders_table ON "orders";
 
 DROP FUNCTION IF EXISTS set_updated_at_column();
 
 DROP TABLE IF EXISTS "users" CASCADE;
-DROP TABLE IF EXISTS "oauth" CASCADE;
 DROP TABLE IF EXISTS "orders" CASCADE;
 DROP TABLE IF EXISTS "products_orders" CASCADE;
 

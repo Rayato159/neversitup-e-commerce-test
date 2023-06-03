@@ -35,15 +35,6 @@ CREATE TABLE "users" (
   "updated_at" TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE "oauth" (
-  "id" uuid NOT NULL UNIQUE PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "user_id" VARCHAR NOT NULL,
-  "access_token" VARCHAR NOT NULL,
-  "refresh_token" VARCHAR NOT NULL,
-  "created_at" TIMESTAMP NOT NULL DEFAULT NOW(),
-  "updated_at" TIMESTAMP NOT NULL DEFAULT NOW()
-);
-
 CREATE TABLE "orders" (
   "id" VARCHAR(7) PRIMARY KEY DEFAULT CONCAT('O', LPAD(NEXTVAL('orders_id_seq')::TEXT, 6, '0')),
   "user_id" VARCHAR,
@@ -61,12 +52,10 @@ CREATE TABLE "products_orders" (
   "product" jsonb
 );
 
-ALTER TABLE "oauth" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id");
-ALTER TABLE "products_orders" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id");
+ALTER TABLE "orders" ADD FOREIGN KEY ("user_id") REFERENCES "users" ("id") ON DELETE CASCADE;
+ALTER TABLE "products_orders" ADD FOREIGN KEY ("order_id") REFERENCES "orders" ("id") ON DELETE CASCADE;
 
 CREATE TRIGGER set_updated_at_timestamp_users_table BEFORE UPDATE ON "users" FOR EACH ROW EXECUTE PROCEDURE set_updated_at_column();
-CREATE TRIGGER set_updated_at_timestamp_oauth_table BEFORE UPDATE ON "oauth" FOR EACH ROW EXECUTE PROCEDURE set_updated_at_column();
 CREATE TRIGGER set_updated_at_timestamp_orders_table BEFORE UPDATE ON "orders" FOR EACH ROW EXECUTE PROCEDURE set_updated_at_column();
 
 COMMIT;

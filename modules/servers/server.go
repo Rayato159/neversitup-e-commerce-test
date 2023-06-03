@@ -12,6 +12,7 @@ import (
 type IServer interface {
 	StartUsersServer()
 	StartProductsServer()
+	StartAuthServer()
 	GetServer() *server
 }
 
