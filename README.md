@@ -1,5 +1,18 @@
 <h1>Neversuitup Microservices E-Commerce Shop</h1>
 
+<h2>✏️ Tasks that have finished (All finish)</h2>
+<ul>
+    <li>✅ Register</li>
+    <li>✅ Login</li>
+    <li>✅ Get Profile</li>
+    <li>✅ Get Order history of User</li>
+    <li>✅ Get All Products</li>
+    <li>✅ Get Product Detail</li>
+    <li>✅ Create Order</li>
+    <li>✅ Cancel Order (Only for 'waiting' status)</li>
+    <li>✅ Get Order Detail</li>
+</ul>
+
 <h2>🚀 App List</h2>
 <ul>
     <li>Users App</li>
@@ -43,19 +56,19 @@ docker run --name neversuitup_auth_db_dev -e POSTGRES_USER=rayato159 -e POSTGRES
 ```bash
 docker exec -it neversuitup_users_db_dev bash
 psql -U rayato159
-CREATE neversuitup_users_db_dev;
+CREATE DATABASE neversuitup_users_db_dev;
 ```
 
 ```bash
 docker exec -it neversuitup_products_db_devt bash
 psql -U rayato159
-CREATE neversuitup_products_db_dev;
+CREATE DATABASE neversuitup_products_db_dev;
 ```
 
 ```bash
 docker exec -it neversuitup_auth_db_dev bash
 psql -U rayato159
-CREATE neversuitup_auth_db_dev;
+CREATE DATABASE neversuitup_auth_db_dev;
 ```
 
 <p>Migrate Script</p>
