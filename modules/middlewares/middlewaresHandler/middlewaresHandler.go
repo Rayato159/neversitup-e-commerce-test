@@ -1,25 +1,23 @@
 package middlewaresHandler
 
 import (
+	"context"
 	"strings"
+	"time"
+
+	pb "github.com/Rayato159/neversuitup-e-commerce-test/modules/auth/authProto"
+	"github.com/Rayato159/neversuitup-e-commerce-test/modules/middlewares"
 
 	"github.com/Rayato159/neversuitup-e-commerce-test/config"
+	"github.com/Rayato159/neversuitup-e-commerce-test/modules/auth"
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/entities"
-	"github.com/Rayato159/neversuitup-e-commerce-test/modules/middlewares/middlewaresUsecase"
 	"github.com/Rayato159/neversuitup-e-commerce-test/pkg/lockkunchae"
+	"github.com/Rayato159/neversuitup-e-commerce-test/pkg/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-)
-
-type middlewareHandlersErrCode string
-
-const (
-	routerCheckErr middlewareHandlersErrCode = "middlware-001"
-	jwtAuthErr     middlewareHandlersErrCode = "middlware-002"
-	paramsCheckErr middlewareHandlersErrCode = "middlware-003"
-	authorizeErr   middlewareHandlersErrCode = "middlware-004"
-	apiKeyErr      middlewareHandlersErrCode = "middlware-005"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 type IMiddlewaresHandler interface {
@@ -32,14 +30,12 @@ type IMiddlewaresHandler interface {
 }
 
 type middlewaresHandler struct {
-	cfg                config.IConfig
-	middlewaresUsecase middlewaresUsecase.IMiddlewaresUsecase
+	cfg config.IConfig
 }
 
-func MiddlewaresHandler(cfg config.IConfig, middlewaresUsecase middlewaresUsecase.IMiddlewaresUsecase) IMiddlewaresHandler {
+func MiddlewaresHandler(cfg config.IConfig) IMiddlewaresHandler {
 	return &middlewaresHandler{
-		cfg:                cfg,
-		middlewaresUsecase: middlewaresUsecase,
+		cfg: cfg,
 	}
 }
 
@@ -59,7 +55,7 @@ func (h *middlewaresHandler) RouterCheck() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		return entities.NewResponse(c).Error(
 			fiber.ErrNotFound.Code,
-			string(routerCheckErr),
+			string(middlewares.RouterCheckErr),
 			"rotuer not found",
 		).Res()
 	}
@@ -80,17 +76,44 @@ func (h *middlewaresHandler) JwtAuth() fiber.Handler {
 		if err != nil {
 			return entities.NewResponse(c).Error(
 				fiber.ErrUnauthorized.Code,
-				string(jwtAuthErr),
+				string(middlewares.JwtAuthErr),
 				err.Error(),
 			).Res()
 		}
 
 		claims := result.Claims
-		if !h.middlewaresUsecase.FindAccessToken(claims.Id, token) {
+
+		conn, err := grpc.Dial(h.cfg.App().AuthGrpcUrl(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+		if err != nil {
+			return entities.NewResponse(c).Error(
+				fiber.ErrInternalServerError.Code,
+				string(auth.LoginErr),
+				err.Error(),
+			).Res()
+		}
+		defer conn.Close()
+
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+		defer cancel()
+
+		client := pb.NewAuthServicesClient(conn)
+		utils.Debug(claims)
+		isValid, _ := client.FindAccessToken(ctx, &pb.FindAccessTokenReq{
+			UserId:      claims.Id,
+			AccessToken: token,
+		})
+		if isValid == nil {
+			return entities.NewResponse(c).Error(
+				fiber.ErrInternalServerError.Code,
+				string(middlewares.JwtAuthErr),
+				"auth grpc server down",
+			).Res()
+		}
+		if !isValid.Result {
 			return entities.NewResponse(c).Error(
 				fiber.ErrUnauthorized.Code,
-				string(jwtAuthErr),
-				"no permission to access",
+				string(middlewares.JwtAuthErr),
+				"access_token is invalid",
 			).Res()
 		}
 
@@ -104,13 +127,10 @@ func (h *middlewaresHandler) JwtAuth() fiber.Handler {
 func (h *middlewaresHandler) ParamsCheck() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		userId := c.Locals("userId")
-		if c.Locals("userRoleId").(int) == 2 {
-			return c.Next()
-		}
-		if c.Params("user_id") != userId {
+		if c.Params("id") != userId {
 			return entities.NewResponse(c).Error(
 				fiber.ErrUnauthorized.Code,
-				string(paramsCheckErr),
+				string(middlewares.ParamsCheckErr),
 				"never gonna give you up",
 			).Res()
 		}
@@ -124,7 +144,7 @@ func (h *middlewaresHandler) ApiKeyAuth() fiber.Handler {
 		if _, err := lockkunchae.ParseApiKey(h.cfg.Jwt(), key); err != nil {
 			return entities.NewResponse(c).Error(
 				fiber.ErrUnauthorized.Code,
-				string(apiKeyErr),
+				string(middlewares.ApiKeyErr),
 				"apikey is invalid or required",
 			).Res()
 		}

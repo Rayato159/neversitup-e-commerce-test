@@ -9,6 +9,7 @@ import (
 
 type IAuthUsecase interface {
 	GetPassport(cfg config.IConfig, req *users.UserForAll) (*users.UserPassport, error)
+	FindAccessToken(userId, accessToken string) bool
 }
 
 type authUsecase struct {
@@ -54,4 +55,8 @@ func (u *authUsecase) GetPassport(cfg config.IConfig, req *users.UserForAll) (*u
 		return nil, err
 	}
 	return passport, nil
+}
+
+func (u *authUsecase) FindAccessToken(userId, accessToken string) bool {
+	return u.authRepository.FindAccessToken(userId, accessToken)
 }

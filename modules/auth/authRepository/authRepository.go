@@ -11,6 +11,9 @@ import (
 
 type IAuthRepository interface {
 	InsertOauth(req *users.UserPassport) error
+	UpdateOauth(req *users.UserToken) error
+	FindOneOauth(refreshToken string) (*users.Oauth, error)
+	FindAccessToken(userId, accessToken string) bool
 }
 
 type authRepository struct {
@@ -72,4 +75,19 @@ func (r *authRepository) FindOneOauth(refreshToken string) (*users.Oauth, error)
 		return nil, fmt.Errorf("oauth not found")
 	}
 	return oauth, nil
+}
+
+func (r *authRepository) FindAccessToken(userId, accessToken string) bool {
+	query := `
+	SELECT
+		(CASE WHEN COUNT(*) = 1 THEN TRUE ELSE FALSE END)
+	FROM "oauth"
+	WHERE "user_id" = $1
+	AND "access_token" = $2;`
+
+	var check bool
+	if err := r.db.Get(&check, query, userId, accessToken); err != nil {
+		return false
+	}
+	return true
 }

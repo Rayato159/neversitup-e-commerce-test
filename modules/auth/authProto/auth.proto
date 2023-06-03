@@ -1,0 +1,19 @@
+// Protobuf Version
+syntax = "proto3";
+
+// Option
+option go_package = "github.com/Rayato159/neversuitup-e-commerce-test";
+
+message FindAccessTokenReq {
+    string user_id = 1;
+    string access_token = 2;
+}
+
+message FindAccessTokenRes {
+    bool result = 1;
+}
+
+// Metthods
+service AuthServices {
+    rpc FindAccessToken (FindAccessTokenReq) returns (FindAccessTokenRes) {}
+}

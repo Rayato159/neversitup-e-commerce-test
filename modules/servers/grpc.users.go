@@ -2,11 +2,33 @@ package servers
 
 import (
 	"context"
+	"fmt"
+	"log"
+	"net"
 	"time"
 
 	pb "github.com/Rayato159/neversuitup-e-commerce-test/modules/users/usersProto"
 	"github.com/Rayato159/neversuitup-e-commerce-test/modules/users/usersUsecase"
+	"google.golang.org/grpc"
 )
+
+func (s *server) StartUsersGRPCServer() {
+	var opts []grpc.ServerOption
+	grpcServer := grpc.NewServer(opts...)
+	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", s.cfg.App().Host(), s.cfg.App().Port()))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
+
+	modules := NewModule(s, nil, grpcServer)
+	pb.RegisterUsersServicesServer(
+		grpcServer,
+		NewUsersGRPCModule(modules.NewUsersModule().Usecase()),
+	)
+
+	log.Printf("users grpc server is starting on %v", s.cfg.App().Url())
+	grpcServer.Serve(lis)
+}
 
 type usersGrpcServer struct {
 	usersUsecase usersUsecase.IUsersUsecase

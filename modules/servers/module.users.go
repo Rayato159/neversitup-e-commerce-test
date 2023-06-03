@@ -36,7 +36,7 @@ func (m *module) NewUsersModule() IUsersModule {
 func (m *usersModule) Init() {
 	g := m.r.Group("/users")
 
-	g.Get("/:id", m.handler.FindOneUser)
+	g.Get("/:id", m.m.Handler().JwtAuth(), m.m.Handler().ParamsCheck(), m.handler.FindOneUser)
 	g.Post("/", m.m.Handler().ApiKeyAuth(), m.handler.Register)
 }
 func (m *usersModule) Handler() usersHandler.IUsersHandler          { return m.handler }
