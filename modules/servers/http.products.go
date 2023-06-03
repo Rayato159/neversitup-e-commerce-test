@@ -4,6 +4,8 @@ import (
 	"log"
 	"os"
 	"os/signal"
+
+	"google.golang.org/grpc"
 )
 
 func (s *server) StartProductsServer() {
@@ -12,8 +14,12 @@ func (s *server) StartProductsServer() {
 	s.app.Use(middlewares.Handler().Logger())
 	s.app.Use(middlewares.Handler().Cors())
 
+	var opts []grpc.ServerOption
+	grpcServer := grpc.NewServer(opts...)
+	defer grpcServer.Stop()
+
 	// Modules
-	modules := NewModule(s, middlewares)
+	modules := NewModule(s, middlewares, grpcServer)
 	modules.NewMonitorModule().Init()
 	modules.NewProductsModule().Init()
 

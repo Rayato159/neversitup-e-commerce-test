@@ -14,7 +14,7 @@ func SetupUsersTest() servers.IModule {
 	db := database.DbConnect(cfg.Db())
 
 	s := servers.NewServer(cfg, db)
-	return servers.NewModule(s.GetServer(), nil)
+	return servers.NewModule(s.GetServer(), nil, nil)
 }
 
 func SetupProductsTest() servers.IModule {
@@ -23,7 +23,16 @@ func SetupProductsTest() servers.IModule {
 	db := database.DbConnect(cfg.Db())
 
 	s := servers.NewServer(cfg, db)
-	return servers.NewModule(s.GetServer(), nil)
+	return servers.NewModule(s.GetServer(), nil, nil)
+}
+
+func SetupAuthTest() servers.IModule {
+	cfg := config.LoadConfig("./.env.auth.test")
+
+	db := database.DbConnect(cfg.Db())
+
+	s := servers.NewServer(cfg, db)
+	return servers.NewModule(s.GetServer(), nil, nil)
 }
 
 func GetConfig() config.IConfig {

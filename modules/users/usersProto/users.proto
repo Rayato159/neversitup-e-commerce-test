@@ -1,0 +1,21 @@
+// Protobuf Version
+syntax = "proto3";
+
+// Option
+option go_package = "github.com/Rayato159/neversuitup-e-commerce-test";
+
+// Product Object
+message FindOneUserByUsernameReq {
+    string username = 1;
+}
+
+message UserForAll{
+    string id = 1;
+    string username = 2;
+    string password = 3;
+}
+
+// Metthods
+service UsersServices {
+    rpc FindOneUserByUsername (FindOneUserByUsernameReq) returns (UserForAll) {}
+}

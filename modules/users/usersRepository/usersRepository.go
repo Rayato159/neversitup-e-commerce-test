@@ -12,6 +12,7 @@ import (
 type IUsersRepository interface {
 	InsertUser(req *users.UserCredential) (*users.UserPassport, error)
 	FindOneUser(userId string) (*users.User, error)
+	FindOneUserByUsername(username string) (*users.UserForAll, error)
 }
 
 type usersRepository struct {
@@ -73,6 +74,25 @@ func (r *usersRepository) FindOneUser(userId string) (*users.User, error) {
 
 	user := new(users.User)
 	if err := r.db.Get(user, query, userId); err != nil {
+		return nil, fmt.Errorf("get user failed: %v", err)
+	}
+	return user, nil
+}
+
+func (r *usersRepository) FindOneUserByUsername(username string) (*users.UserForAll, error) {
+	_, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	query := `
+	SELECT
+		"u"."id",
+		"u"."username",
+		"u"."password"
+	FROM "users" "u"
+	WHERE "u"."username" = $1`
+
+	user := new(users.UserForAll)
+	if err := r.db.Get(user, query, username); err != nil {
 		return nil, fmt.Errorf("get user failed: %v", err)
 	}
 	return user, nil
