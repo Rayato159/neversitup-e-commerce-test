@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	UsersServices_FindOneUserByUsername_FullMethodName = "/UsersServices/FindOneUserByUsername"
 	UsersServices_FindOneUserById_FullMethodName       = "/UsersServices/FindOneUserById"
+	UsersServices_FindOneUserForAllById_FullMethodName = "/UsersServices/FindOneUserForAllById"
 )
 
 // UsersServicesClient is the client API for UsersServices service.
@@ -31,6 +32,7 @@ const (
 type UsersServicesClient interface {
 	FindOneUserByUsername(ctx context.Context, in *FindOneUserByUsernameReq, opts ...grpc.CallOption) (*UserForAll, error)
 	FindOneUserById(ctx context.Context, in *FindOneUserByIdReq, opts ...grpc.CallOption) (*FindOneUserByIdRes, error)
+	FindOneUserForAllById(ctx context.Context, in *FindOneUserByIdReq, opts ...grpc.CallOption) (*UserForAll, error)
 }
 
 type usersServicesClient struct {
@@ -59,12 +61,22 @@ func (c *usersServicesClient) FindOneUserById(ctx context.Context, in *FindOneUs
 	return out, nil
 }
 
+func (c *usersServicesClient) FindOneUserForAllById(ctx context.Context, in *FindOneUserByIdReq, opts ...grpc.CallOption) (*UserForAll, error) {
+	out := new(UserForAll)
+	err := c.cc.Invoke(ctx, UsersServices_FindOneUserForAllById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsersServicesServer is the server API for UsersServices service.
 // All implementations must embed UnimplementedUsersServicesServer
 // for forward compatibility
 type UsersServicesServer interface {
 	FindOneUserByUsername(context.Context, *FindOneUserByUsernameReq) (*UserForAll, error)
 	FindOneUserById(context.Context, *FindOneUserByIdReq) (*FindOneUserByIdRes, error)
+	FindOneUserForAllById(context.Context, *FindOneUserByIdReq) (*UserForAll, error)
 	mustEmbedUnimplementedUsersServicesServer()
 }
 
@@ -77,6 +89,9 @@ func (UnimplementedUsersServicesServer) FindOneUserByUsername(context.Context, *
 }
 func (UnimplementedUsersServicesServer) FindOneUserById(context.Context, *FindOneUserByIdReq) (*FindOneUserByIdRes, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindOneUserById not implemented")
+}
+func (UnimplementedUsersServicesServer) FindOneUserForAllById(context.Context, *FindOneUserByIdReq) (*UserForAll, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindOneUserForAllById not implemented")
 }
 func (UnimplementedUsersServicesServer) mustEmbedUnimplementedUsersServicesServer() {}
 
@@ -127,6 +142,24 @@ func _UsersServices_FindOneUserById_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UsersServices_FindOneUserForAllById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindOneUserByIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServicesServer).FindOneUserForAllById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UsersServices_FindOneUserForAllById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServicesServer).FindOneUserForAllById(ctx, req.(*FindOneUserByIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UsersServices_ServiceDesc is the grpc.ServiceDesc for UsersServices service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -141,6 +174,10 @@ var UsersServices_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "FindOneUserById",
 			Handler:    _UsersServices_FindOneUserById_Handler,
+		},
+		{
+			MethodName: "FindOneUserForAllById",
+			Handler:    _UsersServices_FindOneUserForAllById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

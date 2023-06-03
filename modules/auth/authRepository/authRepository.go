@@ -14,6 +14,7 @@ type IAuthRepository interface {
 	UpdateOauth(req *users.UserToken) error
 	FindOneOauth(refreshToken string) (*users.Oauth, error)
 	FindAccessToken(userId, accessToken string) bool
+	FindUserId(refreshToken string) (string, error)
 }
 
 type authRepository struct {
@@ -90,4 +91,18 @@ func (r *authRepository) FindAccessToken(userId, accessToken string) bool {
 		return false
 	}
 	return true
+}
+
+func (r *authRepository) FindUserId(refreshToken string) (string, error) {
+	query := `
+	SELECT
+		"user_id"
+	FROM "oauth"
+	WHERE "refresh_token" = $1;`
+
+	var id string
+	if err := r.db.Get(&id, query, refreshToken); err != nil {
+		return "", fmt.Errorf("get user_id failed: %v", err)
+	}
+	return id, nil
 }

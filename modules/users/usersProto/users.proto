@@ -27,4 +27,5 @@ message FindOneUserByIdRes {
 service UsersServices {
     rpc FindOneUserByUsername (FindOneUserByUsernameReq) returns (UserForAll) {}
     rpc FindOneUserById (FindOneUserByIdReq) returns (FindOneUserByIdRes) {}
+    rpc FindOneUserForAllById (FindOneUserByIdReq) returns (UserForAll) {}
 }

@@ -18,6 +18,7 @@ import (
 
 type IAuthHandler interface {
 	Login(c *fiber.Ctx) error
+	Refresh(c *fiber.Ctx) error
 }
 
 type authHandler struct {
@@ -82,6 +83,64 @@ func (h *authHandler) Login(c *fiber.Ctx) error {
 		Username: user.Username,
 		Password: user.Password,
 	})
+
+	return entities.NewResponse(c).Success(
+		fiber.StatusOK,
+		passport,
+	).Res()
+}
+
+func (h *authHandler) Refresh(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*30)
+	defer cancel()
+
+	conn, err := grpc.Dial(h.cfg.App().UsersGrpcUrl(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		return entities.NewResponse(c).Error(
+			fiber.ErrInternalServerError.Code,
+			string(auth.LoginErr),
+			err.Error(),
+		).Res()
+	}
+	defer conn.Close()
+
+	client := pb.NewUsersServicesClient(conn)
+
+	req := new(auth.UserRefreshCredential)
+	if err := c.BodyParser(req); err != nil {
+		return entities.NewResponse(c).Error(
+			fiber.ErrBadRequest.Code,
+			string(auth.RefreshErr),
+			err.Error(),
+		).Res()
+	}
+
+	userId, err := h.authUsecase.FindUserId(req.RefreshToken)
+	if err != nil {
+		return entities.NewResponse(c).Error(
+			fiber.ErrBadRequest.Code,
+			string(auth.RefreshErr),
+			err.Error(),
+		).Res()
+	}
+
+	user, err := client.FindOneUserForAllById(ctx, &pb.FindOneUserByIdReq{Id: userId})
+	if err != nil {
+		return entities.NewResponse(c).Error(
+			fiber.ErrBadRequest.Code,
+			string(auth.RefreshErr),
+			err.Error(),
+		).Res()
+	}
+
+	passport, err := h.authUsecase.RefreshPassport(h.cfg, &users.UserClaims{Id: user.Id, Username: user.Username}, req)
+	if err != nil {
+		return entities.NewResponse(c).Error(
+			fiber.ErrBadRequest.Code,
+			string(auth.RefreshErr),
+			err.Error(),
+		).Res()
+	}
 
 	return entities.NewResponse(c).Success(
 		fiber.StatusOK,

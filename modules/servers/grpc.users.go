@@ -58,6 +58,22 @@ func (h *usersGrpcServer) FindOneUserByUsername(ctx context.Context, in *pb.Find
 	}, nil
 }
 
+func (h *usersGrpcServer) FindOneUserForAllById(ctx context.Context, in *pb.FindOneUserByIdReq) (*pb.UserForAll, error) {
+	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
+	defer cancel()
+
+	user, err := h.usersUsecase.FindOneUserForAllById(in.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.UserForAll{
+		Id:       user.Id,
+		Username: user.Username,
+		Password: user.Password,
+	}, nil
+}
+
 func (h *usersGrpcServer) FindOneUserById(ctx context.Context, in *pb.FindOneUserByIdReq) (*pb.FindOneUserByIdRes, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
 	defer cancel()

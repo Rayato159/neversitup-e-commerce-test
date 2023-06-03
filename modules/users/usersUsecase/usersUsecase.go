@@ -10,6 +10,7 @@ type IUsersUsecase interface {
 	FindOneUser(userId string) (*users.User, error)
 	FindOneUserByUsername(username string) (*users.UserForAll, error)
 	FindOneUserById(userId string) bool
+	FindOneUserForAllById(userId string) (*users.UserForAll, error)
 }
 
 type usersUsecase struct {
@@ -52,4 +53,12 @@ func (u *usersUsecase) FindOneUserByUsername(username string) (*users.UserForAll
 
 func (u *usersUsecase) FindOneUserById(userId string) bool {
 	return u.usersRepository.FindOneUserById(userId)
+}
+
+func (u *usersUsecase) FindOneUserForAllById(userId string) (*users.UserForAll, error) {
+	user, err := u.usersRepository.FindOneUserForAllById(userId)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

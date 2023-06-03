@@ -37,6 +37,7 @@ func (m *authModule) Init() {
 	g := m.r.Group("/auth")
 
 	g.Post("/login", m.m.Handler().ApiKeyAuth(), m.handler.Login)
+	g.Post("/refresh", m.m.Handler().ApiKeyAuth(), m.handler.Refresh)
 }
 func (m *authModule) Handler() authHandler.IAuthHandler          { return m.handler }
 func (m *authModule) Usecase() authUsecase.IAuthUsecase          { return m.usecase }
